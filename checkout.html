@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Beatlist by KORE</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo bison-logo center-logo">
+                <span class="bison-title center-logo-text">BEATLIST</span>
+            </div>
+            <div class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-count">0</span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="checkout-section">
+            <div class="checkout-container">
+                <h1>Checkout</h1>
+                
+                <div class="checkout-content">
+                    <div class="order-summary">
+                        <h2>Order Summary</h2>
+                        <div id="checkout-items">
+                            <!-- Items will be populated by JavaScript -->
+                        </div>
+                        <div class="checkout-total">
+                            <span>Total:</span>
+                            <span id="checkout-total-amount">$0.00</span>
+                        </div>
+                    </div>
+
+                    <div class="payment-form">
+                        <h2>Payment Details</h2>
+                        <form id="payment-form">
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="card-element">Credit or Debit Card</label>
+                                <div id="card-element" class="stripe-element">
+                                    <!-- Stripe Card Element will be inserted here -->
+                                </div>
+                                <div id="card-errors" class="error-message" role="alert"></div>
+                            </div>
+                            <button type="submit" class="checkout-button" id="submit-button">
+                                <span id="button-text">Complete Purchase</span>
+                                <div class="spinner hidden" id="spinner"></div>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Beatlist. All rights reserved.</p>
+    </footer>
+
+    <script src="checkout.js"></script>
+</body>
+</html> 

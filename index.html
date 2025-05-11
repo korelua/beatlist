@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beatlist by KORE</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Anton:400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo bison-logo">
+                <span class="bison-title" style="font-size:2rem;line-height:1;">BEATLIST</span>
+            </div>
+            <div class="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-count">0</span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="bison-title">BEATLIST</h1>
+                <div class="bison-subtitle bison-center-red">BY KORE</div>
+                <div class="subtitle-container">
+                    <p class="hero-description">Professional Beats for Professional Artists</p>
+                </div>
+                <div class="scroll-indicator">
+                    <span>Discover Beats</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </section>
+
+        <section class="beats-section">
+            <h2>Featured Collection</h2>
+            <div class="beats-grid">
+                <!-- Beat items will be dynamically added here -->
+            </div>
+        </section>
+
+        <div id="cart-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Shopping Cart</h2>
+                <div id="cart-items"></div>
+                <div class="cart-total">
+                    <p>Total: $<span id="cart-total">0.00</span></p>
+                    <button id="checkout-btn">Checkout</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="license-modal" class="modal">
+            <div class="modal-content license-modal-content">
+                <span class="close license-close">&times;</span>
+                <h2>Select License</h2>
+                <div id="license-options">
+                    <button class="license-option" data-license="Unlimited" data-price="100">Unlimited (WAV, all rights) - $100</button>
+                    <button class="license-option" data-license="Limited" data-price="50">Limited (WAV, up to 100k streams) - $50</button>
+                    <button class="license-option" data-license="MP3" data-price="20">MP3 (up to 10k streams) - $20</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Beatlist by KORE. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html> 
