@@ -10,7 +10,7 @@ const spinner = document.getElementById('spinner');
 const buttonText = document.getElementById('button-text');
 
 // Initialize Stripe (replace with your actual publishable key)
-const stripe = Stripe('pk_test_51RNaeTHBUtSzpji2ocG2DL0Jk3dxEV4AG6GM4NmvZ193diwBQqpjn1w5ZSAA30lC2oA7x7RsO5pgpKPEJm4g2ANU00cMOhulSV');
+const stripe = Stripe(process.env.STRIPE_PUBLISHABLE_KEY || 'pk_test_51RNaeTHBUtSzpji2ocG2DL0Jk3dxEV4AG6GM4NmvZ193diwBQqpjn1w5ZSAA30lC2oA7x7RsO5pgpKPEJm4g2ANU00cMOhulSV');
 const elements = stripe.elements();
 
 // Create card element
@@ -77,7 +77,7 @@ paymentForm.addEventListener('submit', async (e) => {
         const amount = Math.round(total * 100);
 
         // 1. Create PaymentIntent on your server
-        const response = await fetch('http://localhost:4242/create-payment-intent', {
+        const response = await fetch('/create-payment-intent', {  // Updated to use relative path
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -102,10 +102,23 @@ paymentForm.addEventListener('submit', async (e) => {
             throw result.error;
         }
 
-        alert('Purchase successful! Thank you for your order.');
+        // Show success message
+        const successMessage = document.createElement('div');
+        successMessage.className = 'success-message';
+        successMessage.innerHTML = `
+            <h3>Purchase Successful!</h3>
+            <p>Thank you for your order. You will receive a confirmation email shortly.</p>
+            <p>Order ID: ${result.paymentIntent.id}</p>
+        `;
+        paymentForm.innerHTML = '';
+        paymentForm.appendChild(successMessage);
+
+        // Clear cart and redirect after 3 seconds
         cart = [];
         localStorage.setItem('cart', JSON.stringify(cart));
-        window.location.href = 'index.html';
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 3000);
     } catch (error) {
         const errorElement = document.getElementById('card-errors');
         errorElement.textContent = error.message;

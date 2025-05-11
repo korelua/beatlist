@@ -1,26 +1,51 @@
+require('dotenv').config();
 const express = require('express');
 const Stripe = require('stripe');
 const cors = require('cors');
+const path = require('path');
 const app = express();
 
-// Replace with your Stripe secret key
-const stripe = Stripe('sk_test_51RNaeTHBUtSzpji25PubpQ9CjYrClVrrSDoBwPbSHTXzYz4ytNshSIe83MgcbMoJb11IBhDJZsTf7wUgWxMeObPz007ghaC4Wz'); // <-- Your secret key here
+// Use environment variable for Stripe secret key
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
+// Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, '/')));
 
-app.post('/create-payment-intent', async (req, res) => {
-  const { amount, email } = req.body;
-  try {
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount, // in cents
-      currency: 'usd',
-      receipt_email: email,
-    });
-    res.send({ clientSecret: paymentIntent.client_secret });
-  } catch (err) {
-    res.status(500).send({ error: err.message });
-  }
+// Serve static files
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.listen(4242, () => console.log('Server running on port 4242')); 
+app.get('/checkout', (req, res) => {
+    res.sendFile(path.join(__dirname, 'checkout.html'));
+});
+
+// Stripe payment endpoint
+app.post('/create-payment-intent', async (req, res) => {
+    const { amount, email } = req.body;
+    try {
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount, // in cents
+            currency: 'usd',
+            receipt_email: email,
+            automatic_payment_methods: {
+                enabled: true,
+            },
+        });
+        res.send({ clientSecret: paymentIntent.client_secret });
+    } catch (err) {
+        console.error('Stripe error:', err);
+        res.status(500).send({ error: err.message });
+    }
+});
+
+// Health check endpoint for Railway
+app.get('/health', (req, res) => {
+    res.status(200).send('OK');
+});
+
+// Use Railway's PORT or fallback to 3000
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Server running on port ${port}`)); 

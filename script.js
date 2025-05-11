@@ -48,31 +48,39 @@ function showLicenseModal(beatId, event) {
     selectedBeatId = beatId;
     const modal = document.getElementById('license-modal');
     const modalContent = modal.querySelector('.license-modal-content');
-    // Get button position
+    
+    // Calculate position
     let x = window.innerWidth / 2;
     let y = window.innerHeight / 2;
+    
     if (event && event.target) {
         const rect = event.target.getBoundingClientRect();
         x = rect.left + rect.width / 2;
-        // Default: below the button
-        y = rect.top + window.scrollY + rect.height + 16;
-        // Calculate modal height (or use a default)
-        const modalHeight = 260; // px, adjust if needed
-        // If not enough space below, show above the button
-        if (y + modalHeight > window.scrollY + window.innerHeight) {
-            y = rect.top + window.scrollY - modalHeight - 16;
-            if (y < window.scrollY + 16) y = window.scrollY + 16; // Clamp to top
+        y = rect.top + window.scrollY - 100; // Position it higher
+        
+        // Ensure modal stays within viewport
+        const modalHeight = 300; // Approximate modal height
+        if (y < window.scrollY + 20) {
+            y = window.scrollY + 20;
         }
     }
+    
     modal.style.setProperty('--modal-x', `${x}px`);
     modal.style.setProperty('--modal-y', `${y}px`);
     modal.classList.add('active');
+    
+    // Prevent body scrolling when modal is open
+    document.body.style.overflow = 'hidden';
 }
-// Close modal
+
 function closeLicenseModal() {
-    document.getElementById('license-modal').classList.remove('active');
+    const modal = document.getElementById('license-modal');
+    modal.classList.remove('active');
     selectedBeatId = null;
+    // Restore body scrolling
+    document.body.style.overflow = '';
 }
+
 // Handle license selection
 function handleLicenseOption(e) {
     if (!selectedBeatId) return;
@@ -87,6 +95,7 @@ function handleLicenseOption(e) {
     }
     closeLicenseModal();
 }
+
 // Attach modal events after DOM is ready
 window.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.license-option').forEach(btn => {
@@ -122,24 +131,41 @@ function displayBeats() {
                         </div>
                         <div class="custom-audio-player" data-src="${beat.audioUrl}">
                             <button class="custom-play-btn paused"></button>
-                            <div class="custom-timeline">
-                                <div class="custom-progress"></div>
+                            <div class="progress-container">
+                                <div class="progress-bar">
+                                    <div class="progress"></div>
+                                </div>
                             </div>
                         </div>
-                        <button class="add-to-cart" onclick="showLicenseModal(${beat.id}, event)">
-                            Add to Cart
-                        </button>
+                        <div class="add-to-cart-container">
+                            <button class="add-to-cart" onclick="showLicenseModal(${beat.id}, event)">
+                                Add to Cart
+                            </button>
+                            <div class="license-modal-content">
+                                <span class="license-close">&times;</span>
+                                <h2>Select License</h2>
+                                <div id="license-options">
+                                    <button class="license-option" data-license="Unlimited" data-price="100">Unlimited (WAV, all rights) - $100</button>
+                                    <button class="license-option" data-license="Limited" data-price="50">Limited (WAV, up to 100k streams) - $50</button>
+                                    <button class="license-option" data-license="MP3" data-price="20">MP3 (up to 10k streams) - $20</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 `).join('')}
             </div>
         </div>
     `).join('');
 
-    // Custom Audio Player Logic
+    // Initialize audio players
+    initializeAudioPlayers();
+}
+
+function initializeAudioPlayers() {
     document.querySelectorAll('.custom-audio-player').forEach(player => {
         const playBtn = player.querySelector('.custom-play-btn');
-        const timeline = player.querySelector('.custom-timeline');
-        const progress = player.querySelector('.custom-progress');
+        const progressBar = player.querySelector('.progress-bar');
+        const progress = player.querySelector('.progress');
         const audio = new Audio(player.getAttribute('data-src'));
 
         let isPlaying = false;
@@ -163,11 +189,13 @@ function displayBeats() {
             playBtn.classList.add('playing');
             playBtn.classList.remove('paused');
         });
+
         audio.addEventListener('pause', () => {
             isPlaying = false;
             playBtn.classList.remove('playing');
             playBtn.classList.add('paused');
         });
+
         audio.addEventListener('ended', () => {
             isPlaying = false;
             playBtn.classList.remove('playing');
@@ -175,13 +203,15 @@ function displayBeats() {
             audio.currentTime = 0;
             progress.style.width = '0%';
         });
+
         audio.addEventListener('timeupdate', () => {
             const percent = (audio.currentTime / audio.duration) * 100;
             progress.style.width = percent + '%';
         });
 
-        timeline.addEventListener('click', (e) => {
-            const rect = timeline.getBoundingClientRect();
+        // Add click handler for seeking
+        progressBar.addEventListener('click', (e) => {
+            const rect = progressBar.getBoundingClientRect();
             const percent = (e.clientX - rect.left) / rect.width;
             audio.currentTime = percent * audio.duration;
         });
@@ -263,5 +293,116 @@ document.querySelector('.scroll-indicator').addEventListener('click', () => {
     beatsSection.scrollIntoView({ behavior: 'smooth' });
 });
 
-// Initialize the page
+// Search and Filter functionality
+const searchInput = document.getElementById('search-input');
+const genreFilter = document.getElementById('genre-filter');
+const bpmFilter = document.getElementById('bpm-filter');
+const keyFilter = document.getElementById('key-filter');
+
+function filterBeats() {
+    const searchTerm = searchInput.value.toLowerCase();
+    const selectedGenre = genreFilter.value;
+    const selectedBpm = bpmFilter.value;
+    const selectedKey = keyFilter.value;
+
+    const filteredBeats = beats.filter(beat => {
+        // Search term filter
+        const matchesSearch = beat.title.toLowerCase().includes(searchTerm);
+
+        // Genre filter
+        const matchesGenre = !selectedGenre || beat.genre === selectedGenre;
+
+        // BPM filter
+        let matchesBpm = true;
+        if (selectedBpm) {
+            const bpm = parseInt(beat.bpm);
+            switch (selectedBpm) {
+                case '60-80':
+                    matchesBpm = bpm >= 60 && bpm < 80;
+                    break;
+                case '80-100':
+                    matchesBpm = bpm >= 80 && bpm < 100;
+                    break;
+                case '100-120':
+                    matchesBpm = bpm >= 100 && bpm < 120;
+                    break;
+                case '120+':
+                    matchesBpm = bpm >= 120;
+                    break;
+            }
+        }
+
+        // Key filter
+        const matchesKey = !selectedKey || beat.key.includes(selectedKey);
+
+        return matchesSearch && matchesGenre && matchesBpm && matchesKey;
+    });
+
+    // Update the display with filtered beats
+    displayFilteredBeats(filteredBeats);
+}
+
+function displayFilteredBeats(filteredBeats) {
+    // Group filtered beats by genre
+    const beatsByGenre = filteredBeats.reduce((acc, beat) => {
+        if (!acc[beat.genre]) {
+            acc[beat.genre] = [];
+        }
+        acc[beat.genre].push(beat);
+        return acc;
+    }, {});
+
+    // Create HTML for each genre section
+    beatsGrid.innerHTML = Object.entries(beatsByGenre).map(([genre, genreBeats]) => `
+        <div class="genre-section">
+            <h2 class="genre-title">${genre}</h2>
+            <div class="genre-beats">
+                ${genreBeats.map(beat => `
+                    <div class="beat-item">
+                        <div class="beat-preview">
+                            <div class="beat-info">
+                                <h3 class="beat-title">${beat.title}</h3>
+                                <p class="beat-details">${beat.bpm} | ${beat.key}</p>
+                                <p class="beat-price">$${beat.price.toFixed(2)}</p>
+                            </div>
+                        </div>
+                        <div class="custom-audio-player" data-src="${beat.audioUrl}">
+                            <button class="custom-play-btn paused"></button>
+                            <div class="progress-container">
+                                <div class="progress-bar">
+                                    <div class="progress"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="add-to-cart-container">
+                            <button class="add-to-cart" onclick="showLicenseModal(${beat.id}, event)">
+                                Add to Cart
+                            </button>
+                            <div class="license-modal-content">
+                                <span class="license-close">&times;</span>
+                                <h2>Select License</h2>
+                                <div id="license-options">
+                                    <button class="license-option" data-license="Unlimited" data-price="100">Unlimited (WAV, all rights) - $100</button>
+                                    <button class="license-option" data-license="Limited" data-price="50">Limited (WAV, up to 100k streams) - $50</button>
+                                    <button class="license-option" data-license="MP3" data-price="20">MP3 (up to 10k streams) - $20</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `).join('');
+
+    // Reinitialize audio players for filtered beats
+    initializeAudioPlayers();
+}
+
+// Add event listeners for search and filter
+searchInput.addEventListener('input', filterBeats);
+genreFilter.addEventListener('change', filterBeats);
+bpmFilter.addEventListener('change', filterBeats);
+keyFilter.addEventListener('change', filterBeats);
+
+// Initialize the display
 displayBeats(); 

@@ -231,7 +231,9 @@ main {
 /* Beats Section */
 .beats-section {
     background: #000;
-    padding: 6rem 2rem;
+    padding: 6rem 2rem 12rem;
+    min-height: 100vh;
+    position: relative;
 }
 
 .beats-section h2, .genre-title {
@@ -247,12 +249,13 @@ main {
 }
 
 .beats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 3rem;
-    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    padding: 2rem;
     max-width: 1400px;
     margin: 0 auto;
+    padding-bottom: 8rem;
 }
 
 .beat-item {
@@ -749,6 +752,40 @@ footer {
     gap: 1rem;
     width: 100%;
     margin: 0.5rem 0;
+    padding: 0.5rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    border: 1px solid rgba(255, 0, 0, 0.1);
+}
+
+.progress-container {
+    flex: 1;
+    padding: 0 0.5rem;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    cursor: pointer;
+    position: relative;
+    transition: height 0.1s ease;
+}
+
+.progress-bar:hover {
+    height: 6px;
+}
+
+.progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: #ff0000;
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.1s linear;
 }
 
 .custom-play-btn {
@@ -760,7 +797,13 @@ footer {
     position: relative;
     outline: none;
     padding: 0;
+    transition: transform 0.3s ease;
 }
+
+.custom-play-btn:hover {
+    transform: scale(1.1);
+}
+
 .custom-play-btn::before {
     content: '';
     display: block;
@@ -770,12 +813,15 @@ footer {
     border-left: 24px solid #ff0000;
     border-top: 14px solid transparent;
     border-bottom: 14px solid transparent;
+    transition: all 0.3s ease;
 }
+
 .custom-play-btn.paused::before {
     border-left: 24px solid #ff0000;
     border-top: 14px solid transparent;
     border-bottom: 14px solid transparent;
 }
+
 .custom-play-btn.playing::before {
     content: '';
     display: block;
@@ -795,6 +841,7 @@ footer {
     height: 20px;
     background: none;
 }
+
 .custom-play-btn.playing::after {
     content: '';
     position: absolute;
@@ -833,71 +880,100 @@ footer {
 }
 
 /* License Modal Styles */
-.license-modal-content {
-    max-width: 400px;
-    text-align: center;
+.add-to-cart-container {
+    position: relative;
 }
+
+.license-modal-content {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    min-width: 320px;
+    max-width: 400px;
+    background: rgba(26, 0, 0, 0.95);
+    border: 1px solid rgba(255, 0, 0, 0.3);
+    border-radius: 4px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 32px rgba(255, 0, 0, 0.2);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    margin-top: 10px;
+}
+
+.license-modal-content::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid rgba(255, 0, 0, 0.3);
+}
+
+.add-to-cart:hover + .license-modal-content,
+.license-modal-content:hover {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
 #license-options {
     display: flex;
     flex-direction: column;
-    gap: 1.2rem;
-    margin-top: 2rem;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
 }
+
 .license-option {
-    background: #181818;
+    background: rgba(0, 0, 0, 0.5);
     color: #fff;
-    border: 2px solid #ff0000;
+    border: 2px solid rgba(255, 0, 0, 0.5);
     border-radius: 4px;
-    padding: 1rem 0.5rem;
-    font-size: 1.1rem;
+    padding: 1rem;
+    font-size: 1rem;
     font-family: 'Anton', Arial, sans-serif;
     letter-spacing: 0.05em;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s, border 0.2s;
-}
-.license-option:hover {
-    background: #ff0000;
-    color: #fff;
-    border-color: #fff;
-}
-.license-close {
-    color: #ff0000;
-    font-size: 2rem;
-    position: absolute;
-    right: 1.2rem;
-    top: 1.2rem;
-    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-/* License Modal Animation and Positioning */
-#license-modal {
-    display: none;
+.license-option:hover {
+    background: rgba(255, 0, 0, 0.1);
+    border-color: #ff0000;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.2);
+}
+
+.license-close {
     position: absolute;
-    z-index: 2000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
+    right: 1rem;
+    top: 1rem;
+    color: #ff0000;
+    font-size: 1.5rem;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: all 0.3s ease;
 }
-#license-modal.active {
-    display: block;
-}
-.license-modal-content {
-    position: absolute;
-    min-width: 320px;
-    max-width: 400px;
-    left: var(--modal-x, 50vw);
-    top: var(--modal-y, 50vh);
-    transform: translate(-50%, -10%) scale(0.85);
-    opacity: 0;
-    pointer-events: auto;
-    transition: opacity 0.25s cubic-bezier(.68,-0.55,.27,1.55), transform 0.25s cubic-bezier(.68,-0.55,.27,1.55);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.35);
-}
-#license-modal.active .license-modal-content {
+
+.license-close:hover {
     opacity: 1;
-    transform: translate(-50%, 0) scale(1);
+    transform: rotate(90deg);
+}
+
+/* Add to Cart Button with License Modal */
+.add-to-cart {
+    position: relative;
+}
+
+.add-to-cart:hover + .license-modal-content,
+.license-modal-content:hover {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
 }
 
 .center-logo {
@@ -920,4 +996,132 @@ footer {
     text-shadow: none;
     text-align: left;
     padding: 0;
+}
+
+.search-filter-container {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: rgba(26, 0, 0, 0.5);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 0, 0, 0.2);
+    box-shadow: 0 4px 20px rgba(255, 0, 0, 0.1);
+}
+
+.search-box {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 1rem 3rem 1rem 1.5rem;
+    border: 1px solid rgba(255, 0, 0, 0.3);
+    border-radius: 4px;
+    font-size: 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: #ff0000;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
+}
+
+.search-box input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.search-box i {
+    position: absolute;
+    right: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ff0000;
+    font-size: 1.1rem;
+}
+
+.filter-options {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.filter-options select {
+    padding: 1rem 1.5rem;
+    border: 1px solid rgba(255, 0, 0, 0.3);
+    border-radius: 4px;
+    font-size: 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    min-width: 150px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff0000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+}
+
+.filter-options select:hover {
+    border-color: #ff0000;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
+}
+
+.filter-options select:focus {
+    outline: none;
+    border-color: #ff0000;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
+}
+
+.filter-options select option {
+    background: #000;
+    color: #fff;
+    padding: 1rem;
+}
+
+@media (max-width: 768px) {
+    .filter-options {
+        flex-direction: column;
+    }
+    
+    .filter-options select {
+        width: 100%;
+    }
+}
+
+/* Add a spacer at the bottom of the page */
+.beats-section::after {
+    content: '';
+    display: block;
+    height: 200px;
+    width: 100%;
+}
+
+.success-message {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(0, 255, 0, 0.1);
+    border: 1px solid rgba(0, 255, 0, 0.3);
+    border-radius: 4px;
+    margin: 2rem 0;
+}
+
+.success-message h3 {
+    color: #00ff00;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.success-message p {
+    color: #fff;
+    margin: 0.5rem 0;
+}
+
+.success-message p:last-child {
+    color: #888;
+    font-size: 0.9rem;
+    margin-top: 1rem;
 } 
