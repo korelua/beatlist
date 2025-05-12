@@ -3,6 +3,7 @@ const beats = [
     {
         id: 1,
         title: "Griselda",
+        price: 100, // Base price for unlimited license
         audioUrl: "public/beats/griselda.wav",
         bpm: "90 BPM",
         key: "C min",
@@ -11,6 +12,7 @@ const beats = [
     {
         id: 2,
         title: "Harp shit",
+        price: 100, // Base price for unlimited license
         audioUrl: "public/beats/harp.wav",
         bpm: "unknown BPM",
         key: "unknown key",
@@ -19,6 +21,7 @@ const beats = [
     {
         id: 3,
         title: "Runtz",
+        price: 100, // Base price for unlimited license
         audioUrl: "public/beats/runtz.wav",
         bpm: "77 BPM",
         key: " D# min",
@@ -27,7 +30,7 @@ const beats = [
     {
         id: 4,
         title: "Spacedrop",
-        price: 19.99,
+        price: 100, // Base price for unlimited license
         audioUrl: "public/beats/spacedrop.wav",
         bpm: "120 BPM",
         key: "D# min",
@@ -36,7 +39,7 @@ const beats = [
     {
         id: 5,
         title: "Bloomin",
-        price: 19.99,
+        price: 100, // Base price for unlimited license
         audioUrl: "public/beats/blooming.wav",
         bpm: "130 BPM",
         key: "D min",
@@ -109,14 +112,29 @@ function closeLicenseModal() {
 function handleLicenseOption(e) {
     if (!selectedBeatId) return;
     const license = e.target.getAttribute('data-license');
-    const price = parseFloat(e.target.getAttribute('data-price'));
     const beat = beats.find(b => b.id === selectedBeatId);
     if (beat) {
+        // Calculate the final price based on the license type
+        let finalPrice;
+        switch(license) {
+            case 'Unlimited':
+                finalPrice = beat.price; // Full price for unlimited license
+                break;
+            case 'Limited':
+                finalPrice = beat.price * 0.5; // 50% of full price for limited license
+                break;
+            case 'MP3':
+                finalPrice = beat.price * 0.2; // 20% of full price for MP3 license
+                break;
+            default:
+                finalPrice = beat.price;
+        }
+        
         cart.push({ 
             ...beat, 
             license, 
-            price,
-            displayPrice: `$${price.toFixed(2)} (${license})`
+            price: finalPrice,
+            displayPrice: `$${finalPrice.toFixed(2)} (${license})`
         });
         updateCart();
         localStorage.setItem('cart', JSON.stringify(cart));
@@ -480,11 +498,27 @@ keyFilter.addEventListener('change', filterBeats);
 function addToCart(beatId, license, price) {
     const beat = beats.find(b => b.id === beatId);
     if (beat) {
+        // Calculate the final price based on the license type
+        let finalPrice;
+        switch(license) {
+            case 'Unlimited':
+                finalPrice = beat.price; // Full price for unlimited license
+                break;
+            case 'Limited':
+                finalPrice = beat.price * 0.5; // 50% of full price for limited license
+                break;
+            case 'MP3':
+                finalPrice = beat.price * 0.2; // 20% of full price for MP3 license
+                break;
+            default:
+                finalPrice = beat.price;
+        }
+        
         cart.push({ 
             ...beat, 
             license, 
-            price,
-            displayPrice: `$${price.toFixed(2)} (${license})`
+            price: finalPrice,
+            displayPrice: `$${finalPrice.toFixed(2)} (${license})`
         });
         updateCart();
         localStorage.setItem('cart', JSON.stringify(cart));
