@@ -262,8 +262,10 @@ main {
     background-color: rgba(26, 0, 0, 0.5);
     border-radius: 4px;
     padding: 1rem;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     border: 1px solid rgba(255, 0, 0, 0.1);
+    /* Default animation duration (will be overridden by JS) */
+    --beat-animation-duration: 1s; 
 }
 
 .beat-item:hover {
@@ -1124,4 +1126,230 @@ footer {
     color: #888;
     font-size: 0.9rem;
     margin-top: 1rem;
+}
+
+/* New License Button Styles */
+.license-buttons-container {
+    position: relative;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.add-to-cart-button {
+    width: 100%;
+    padding: 12px 20px;
+    background: rgba(60, 0, 0, 0.7);
+    color: white;
+    border: 1px solid rgba(255, 0, 0, 0.4);
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Anton', sans-serif;
+    font-size: 16px;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.add-to-cart-button:hover {
+    background: rgba(80, 0, 0, 0.8);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.license-buttons {
+    display: flex;
+    width: 100%;
+    height: 0;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    border-radius: 4px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+}
+
+.license-buttons-container:hover .license-buttons {
+    height: 80px;
+    opacity: 1;
+    margin-top: 8px;
+}
+
+.license-buttons-container:hover .add-to-cart-button {
+    opacity: 0.7;
+}
+
+.license-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+    text-transform: uppercase;
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+}
+
+.license-btn:not(:last-child) {
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.license-btn.unlimited {
+    background: rgba(100, 0, 0, 0.9);
+}
+
+.license-btn.limited {
+    background: rgba(80, 0, 0, 0.9);
+}
+
+.license-btn.mp3 {
+    background: rgba(60, 0, 0, 0.9);
+}
+
+.license-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.license-btn.unlimited:hover {
+    background: rgba(140, 0, 0, 1);
+}
+
+.license-btn.limited:hover {
+    background: rgba(120, 0, 0, 1);
+}
+
+.license-btn.mp3:hover {
+    background: rgba(100, 0, 0, 1);
+}
+
+.license-name {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 4px;
+    color: white;
+}
+
+.license-details {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 4px;
+}
+
+.license-price {
+    font-size: 14px;
+    color: #ff0000;
+    text-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
+}
+
+/* After hover, animate a glow effect */
+.license-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.1), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.license-btn:hover::after {
+    transform: translateX(100%);
+    transition: transform 0.5s ease;
+}
+
+/* Add a subtle shine to the add-to-cart button */
+.add-to-cart-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.7s ease;
+}
+
+.add-to-cart-button:hover::before {
+    left: 100%;
+}
+
+/* Remove old license modal styles */
+.license-modal-content {
+    display: none;
+}
+
+/* Beat playing effects */
+.beat-item {
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    /* Default animation duration (will be overridden by JS) */
+    --beat-animation-duration: 1s; 
+}
+
+.beat-playing {
+    border-color: rgba(255, 0, 0, 0.5) !important;
+    position: relative;
+    z-index: 5;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+    /* Use the custom animation duration that matches the BPM */
+    animation: beat-pulse var(--beat-animation-duration) ease-in-out infinite alternate;
+}
+
+@keyframes beat-pulse {
+    0% {
+        transform: translateY(0);
+        box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
+    }
+    100% {
+        transform: translateY(-2px);
+        box-shadow: 0 0 25px rgba(255, 0, 0, 0.4);
+    }
+}
+
+.beat-playing .beat-preview {
+    border-color: rgba(255, 0, 0, 0.6);
+    box-shadow: inset 0 0 20px rgba(255, 0, 0, 0.1);
+}
+
+.beat-playing .beat-title {
+    color: #ff3333;
+    text-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
+    /* Use the same custom animation duration for the text glow */
+    animation: text-glow var(--beat-animation-duration) ease-in-out infinite alternate;
+}
+
+@keyframes text-glow {
+    0% {
+        text-shadow: 0 0 3px rgba(255, 0, 0, 0.3);
+    }
+    100% {
+        text-shadow: 0 0 8px rgba(255, 0, 0, 0.6);
+    }
+}
+
+.beat-playing .progress-bar {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.beat-playing .progress {
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+}
+
+/* Remove the button pulse animation */
+.custom-play-btn.playing::after {
+    animation: none;
+}
+
+@keyframes button-pulse {
+    /* Remove this animation or comment it out */
+    /* We're no longer using this animation */
 } 
