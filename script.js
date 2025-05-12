@@ -38,7 +38,7 @@ const beats = [
     },
     {
         id: 5,
-        title: "Bloomin",
+        title: "Penis",
         price: 100, // Base price for unlimited license
         audioUrl: "public/beats/blooming.wav",
         bpm: "130 BPM",
