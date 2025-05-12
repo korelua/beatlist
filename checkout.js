@@ -10,7 +10,7 @@ const spinner = document.getElementById('spinner');
 const buttonText = document.getElementById('button-text');
 
 // Initialize Stripe (replace with your actual publishable key)
-const stripe = Stripe(process.env.STRIPE_PUBLISHABLE_KEY || 'pk_test_51RNaeTHBUtSzpji2ocG2DL0Jk3dxEV4AG6GM4NmvZ193diwBQqpjn1w5ZSAA30lC2oA7x7RsO5pgpKPEJm4g2ANU00cMOhulSV');
+const stripe = Stripe('pk_live_51RNaeJH4jaj8obY2Cb2TK4ThCwW7d0ArfKJLznasbKqKsKVBEbwZQHOqkFGopVsbhPGxSFMWFcTMPW1b5c4GPTp100BrVZsQt5');
 const elements = stripe.elements();
 
 // Create card element
