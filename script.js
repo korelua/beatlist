@@ -4,20 +4,29 @@ const beats = [
         id: 1,
         title: "Griselda",
         price: 19.99,
-        audioUrl: "C:/Users/KORE/Desktop/BEATS/28 - griselda freestyle tpe beat (90 bpm C min).wav",
+        audioUrl: "/beats/griselda.wav",
         bpm: "90 BPM",
         key: "C min",
-        genre: "Hip-Hop"
+        genre: "Hip-Hop",
     },
     {
         id: 2,
         title: "Harp shit",
         price: 19.99,
-        audioUrl: "C:/Users/KORE/Desktop/BEATS/Harp - hop !.wav",
+        audioUrl: "/beats/harp.wav",
         bpm: "unknown BPM",
         key: "unknown key",
-        genre: "Hip-Hop"
-    }
+        genre: "Hip-Hop",
+    },
+    {
+        id: 3,
+        title: "Runtz",
+        price: 19.99,
+        audioUrl: "/beats/runtz.wav",
+        bpm: "77 BPM",
+        key: " D# min",
+        genre: "Hip-Hop",
+    },
     // Add more beats following the same structure
     // Example:
     // {
