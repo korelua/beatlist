@@ -3,8 +3,7 @@ const beats = [
     {
         id: 1,
         title: "Griselda",
-        price: 19.99,
-        audioUrl: "/beats/griselda.wav",
+        audioUrl: "public/beats/griselda.wav",
         bpm: "90 BPM",
         key: "C min",
         genre: "Hip-Hop",
@@ -12,8 +11,7 @@ const beats = [
     {
         id: 2,
         title: "Harp shit",
-        price: 19.99,
-        audioUrl: "/beats/harp.wav",
+        audioUrl: "public/beats/harp.wav",
         bpm: "unknown BPM",
         key: "unknown key",
         genre: "Hip-Hop",
@@ -21,11 +19,28 @@ const beats = [
     {
         id: 3,
         title: "Runtz",
-        price: 19.99,
-        audioUrl: "/beats/runtz.wav",
+        audioUrl: "public/beats/runtz.wav",
         bpm: "77 BPM",
         key: " D# min",
         genre: "Hip-Hop",
+    },  
+    {
+        id: 4,
+        title: "Spacedrop",
+        price: 19.99,
+        audioUrl: "public/beats/spacedrop.wav",
+        bpm: "120 BPM",
+        key: "D# min",
+        genre: "Trap",
+    },
+    {
+        id: 5,
+        title: "Bloomin",
+        price: 19.99,
+        audioUrl: "public/beats/blooming.wav",
+        bpm: "130 BPM",
+        key: "D min",
+        genre: "R&B",
     },
     // Add more beats following the same structure
     // Example:
@@ -97,7 +112,12 @@ function handleLicenseOption(e) {
     const price = parseFloat(e.target.getAttribute('data-price'));
     const beat = beats.find(b => b.id === selectedBeatId);
     if (beat) {
-        cart.push({ ...beat, license, price });
+        cart.push({ 
+            ...beat, 
+            license, 
+            price,
+            displayPrice: `$${price.toFixed(2)} (${license})`
+        });
         updateCart();
         localStorage.setItem('cart', JSON.stringify(cart));
         showNotification(`Beat added to cart! (${license} license)`);
@@ -135,7 +155,6 @@ function displayBeats() {
                             <div class="beat-info">
                                 <h3 class="beat-title">${beat.title}</h3>
                                 <p class="beat-details">${beat.bpm} | ${beat.key}</p>
-                                <p class="beat-price">$${beat.price.toFixed(2)}</p>
                             </div>
                         </div>
                         <div class="custom-audio-player" data-src="${beat.audioUrl}">
@@ -146,18 +165,24 @@ function displayBeats() {
                                 </div>
                             </div>
                         </div>
-                        <div class="add-to-cart-container">
-                            <button class="add-to-cart" onclick="showLicenseModal(${beat.id}, event)">
-                                Add to Cart
-                            </button>
-                            <div class="license-modal-content">
-                                <span class="license-close">&times;</span>
-                                <h2>Select License</h2>
-                                <div id="license-options">
-                                    <button class="license-option" data-license="Unlimited" data-price="100">Unlimited (WAV, all rights) - $100</button>
-                                    <button class="license-option" data-license="Limited" data-price="50">Limited (WAV, up to 100k streams) - $50</button>
-                                    <button class="license-option" data-license="MP3" data-price="20">MP3 (up to 10k streams) - $20</button>
-                                </div>
+                        <div class="license-buttons-container">
+                            <button class="add-to-cart-button">Add to Cart</button>
+                            <div class="license-buttons">
+                                <button class="license-btn unlimited" onclick="addToCart(${beat.id}, 'Unlimited', 100)">
+                                    <span class="license-name">UNLIMITED</span>
+                                    <span class="license-details">ALL RIGHTS</span>
+                                    <span class="license-price">100 $</span>
+                                </button>
+                                <button class="license-btn limited" onclick="addToCart(${beat.id}, 'Limited', 50)">
+                                    <span class="license-name">LIMITED</span>
+                                    <span class="license-details">100K streams</span>
+                                    <span class="license-price">50 $</span>
+                                </button>
+                                <button class="license-btn mp3" onclick="addToCart(${beat.id}, 'MP3', 20)">
+                                    <span class="license-name">MP3</span>
+                                    <span class="license-details">10K streams</span>
+                                    <span class="license-price">20$</span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -175,21 +200,50 @@ function initializeAudioPlayers() {
         const playBtn = player.querySelector('.custom-play-btn');
         const progressBar = player.querySelector('.progress-bar');
         const progress = player.querySelector('.progress');
+        const beatItem = player.closest('.beat-item');
         const audio = new Audio(player.getAttribute('data-src'));
+        
+        // Get the BPM value and calculate animation duration
+        let bpmValue = 120; // Default BPM if not specified
+        const bpmText = beatItem.querySelector('.beat-details').textContent;
+        if (bpmText) {
+            // Extract BPM number from text like "90 BPM | C min"
+            const bpmMatch = bpmText.match(/(\d+)\s*BPM/i);
+            if (bpmMatch && bpmMatch[1]) {
+                bpmValue = parseInt(bpmMatch[1]);
+            }
+        }
+        
+        // Calculate animation duration: slower BPM = longer duration
+        // Formula: 60 seconds / BPM * beats per animation cycle
+        // Using 4 beats per animation cycle for a more dramatic effect
+        const animationDuration = (60 / bpmValue) * 4;
+        
+        // Set custom animation duration as data attribute
+        beatItem.style.setProperty('--beat-animation-duration', `${animationDuration}s`);
 
         let isPlaying = false;
 
         playBtn.addEventListener('click', () => {
             if (isPlaying) {
                 audio.pause();
+                // Remove playing class
+                beatItem.classList.remove('beat-playing');
             } else {
                 // Pause all other custom players
                 document.querySelectorAll('.custom-audio-player').forEach(p => {
                     if (p !== player) {
                         p.audio && p.audio.pause();
+                        // Remove playing class from other beat items
+                        const otherBeatItem = p.closest('.beat-item');
+                        if (otherBeatItem) {
+                            otherBeatItem.classList.remove('beat-playing');
+                        }
                     }
                 });
                 audio.play();
+                // Add playing class to trigger CSS animations
+                beatItem.classList.add('beat-playing');
             }
         });
 
@@ -203,6 +257,8 @@ function initializeAudioPlayers() {
             isPlaying = false;
             playBtn.classList.remove('playing');
             playBtn.classList.add('paused');
+            // Remove playing class
+            beatItem.classList.remove('beat-playing');
         });
 
         audio.addEventListener('ended', () => {
@@ -211,6 +267,8 @@ function initializeAudioPlayers() {
             playBtn.classList.add('paused');
             audio.currentTime = 0;
             progress.style.width = '0%';
+            // Remove playing class
+            beatItem.classList.remove('beat-playing');
         });
 
         audio.addEventListener('timeupdate', () => {
@@ -240,7 +298,7 @@ function updateCart() {
     cartItems.innerHTML = cart.map((item, index) => `
         <div class="cart-item">
             <span>${item.title} <span style='color:#ff0000;font-size:0.9em;'>[${item.license}]</span></span>
-            <span>$${item.price.toFixed(2)}</span>
+            <span>${item.displayPrice}</span>
             <button onclick="removeFromCart(${index})">Remove</button>
         </div>
     `).join('');
@@ -372,7 +430,6 @@ function displayFilteredBeats(filteredBeats) {
                             <div class="beat-info">
                                 <h3 class="beat-title">${beat.title}</h3>
                                 <p class="beat-details">${beat.bpm} | ${beat.key}</p>
-                                <p class="beat-price">$${beat.price.toFixed(2)}</p>
                             </div>
                         </div>
                         <div class="custom-audio-player" data-src="${beat.audioUrl}">
@@ -383,18 +440,24 @@ function displayFilteredBeats(filteredBeats) {
                                 </div>
                             </div>
                         </div>
-                        <div class="add-to-cart-container">
-                            <button class="add-to-cart" onclick="showLicenseModal(${beat.id}, event)">
-                                Add to Cart
-                            </button>
-                            <div class="license-modal-content">
-                                <span class="license-close">&times;</span>
-                                <h2>Select License</h2>
-                                <div id="license-options">
-                                    <button class="license-option" data-license="Unlimited" data-price="100">Unlimited (WAV, all rights) - $100</button>
-                                    <button class="license-option" data-license="Limited" data-price="50">Limited (WAV, up to 100k streams) - $50</button>
-                                    <button class="license-option" data-license="MP3" data-price="20">MP3 (up to 10k streams) - $20</button>
-                                </div>
+                        <div class="license-buttons-container">
+                            <button class="add-to-cart-button">Add to Cart</button>
+                            <div class="license-buttons">
+                                <button class="license-btn unlimited" onclick="addToCart(${beat.id}, 'Unlimited', 100)">
+                                    <span class="license-name">UNLIMITED</span>
+                                    <span class="license-details">ALL RIGHTS</span>
+                                    <span class="license-price">100 $</span>
+                                </button>
+                                <button class="license-btn limited" onclick="addToCart(${beat.id}, 'Limited', 50)">
+                                    <span class="license-name">LIMITED</span>
+                                    <span class="license-details">100K streams</span>
+                                    <span class="license-price">50 $</span>
+                                </button>
+                                <button class="license-btn mp3" onclick="addToCart(${beat.id}, 'MP3', 20)">
+                                    <span class="license-name">MP3</span>
+                                    <span class="license-details">10K streams</span>
+                                    <span class="license-price">20$</span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -412,6 +475,22 @@ searchInput.addEventListener('input', filterBeats);
 genreFilter.addEventListener('change', filterBeats);
 bpmFilter.addEventListener('change', filterBeats);
 keyFilter.addEventListener('change', filterBeats);
+
+// Add to cart directly from license buttons
+function addToCart(beatId, license, price) {
+    const beat = beats.find(b => b.id === beatId);
+    if (beat) {
+        cart.push({ 
+            ...beat, 
+            license, 
+            price,
+            displayPrice: `$${price.toFixed(2)} (${license})`
+        });
+        updateCart();
+        localStorage.setItem('cart', JSON.stringify(cart));
+        showNotification(`Beat added to cart! (${license} license)`);
+    }
+}
 
 // Initialize the display
 displayBeats(); 
