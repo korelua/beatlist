@@ -38,7 +38,7 @@ const beats = [
     },
     {
         id: 5,
-        title: "Penis",
+        title: "blooming",
         price: 100, // Base price for unlimited license
         audioUrl: "public/beats/blooming.wav",
         bpm: "130 BPM",
@@ -527,4 +527,57 @@ function addToCart(beatId, license, price) {
 }
 
 // Initialize the display
-displayBeats(); 
+displayBeats();
+
+// Mobile Menu Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const mobileSearchInput = document.querySelector('.mobile-search input');
+    const mobileGenreFilter = document.getElementById('mobile-genre-filter');
+    const mobileBpmFilter = document.getElementById('mobile-bpm-filter');
+    const mobileKeyFilter = document.getElementById('mobile-key-filter');
+
+    // Toggle mobile menu
+    mobileMenuBtn.addEventListener('click', function() {
+        mobileMenu.classList.toggle('active');
+        mobileMenuBtn.querySelector('i').classList.toggle('fa-bars');
+        mobileMenuBtn.querySelector('i').classList.toggle('fa-times');
+    });
+
+    // Sync mobile search with main search
+    mobileSearchInput.addEventListener('input', function(e) {
+        document.getElementById('search-input').value = e.target.value;
+        filterBeats();
+    });
+
+    // Sync mobile filters with main filters
+    mobileGenreFilter.addEventListener('change', function(e) {
+        document.getElementById('genre-filter').value = e.target.value;
+        filterBeats();
+    });
+
+    mobileBpmFilter.addEventListener('change', function(e) {
+        document.getElementById('bpm-filter').value = e.target.value;
+        filterBeats();
+    });
+
+    mobileKeyFilter.addEventListener('change', function(e) {
+        document.getElementById('key-filter').value = e.target.value;
+        filterBeats();
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+            mobileMenu.classList.remove('active');
+            mobileMenuBtn.querySelector('i').classList.add('fa-bars');
+            mobileMenuBtn.querySelector('i').classList.remove('fa-times');
+        }
+    });
+
+    // Prevent body scroll when mobile menu is open
+    mobileMenuBtn.addEventListener('click', function() {
+        document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+    });
+}); 

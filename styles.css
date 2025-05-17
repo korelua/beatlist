@@ -1352,4 +1352,245 @@ footer {
 @keyframes button-pulse {
     /* Remove this animation or comment it out */
     /* We're no longer using this animation */
+}
+
+/* Mobile Menu Styles */
+.mobile-menu-btn {
+    display: none;
+    font-size: 1.5rem;
+    color: #fff;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.mobile-menu {
+    display: none;
+    background: rgba(0, 0, 0, 0.95);
+    padding: 1rem;
+    border-top: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+.mobile-search {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.mobile-search input {
+    width: 100%;
+    padding: 0.8rem 2.5rem 0.8rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: #fff;
+    font-size: 1rem;
+}
+
+.mobile-search i {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fff;
+}
+
+.mobile-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.mobile-filters select {
+    width: 100%;
+    padding: 0.8rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    color: #fff;
+    font-size: 1rem;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    .search-filter-container {
+        display: none;
+    }
+
+    .mobile-menu.active {
+        display: block;
+    }
+
+    .beats-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+
+    .beat-item {
+        margin: 0;
+    }
+
+    .hero-content {
+        padding: 1rem;
+    }
+
+    .bison-title {
+        font-size: 3rem;
+    }
+
+    .bison-subtitle {
+        font-size: 1rem;
+        letter-spacing: 0.3em;
+    }
+
+    .hero-description {
+        font-size: 1rem;
+    }
+
+    .beats-section {
+        padding: 4rem 1rem 8rem;
+    }
+
+    .beats-section h2 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .modal-content {
+        width: 95%;
+        max-width: none;
+        margin: 1rem;
+        padding: 1rem;
+    }
+
+    .cart-item {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .cart-item-info {
+        width: 100%;
+    }
+
+    .cart-item-price {
+        width: 100%;
+        text-align: left;
+    }
+
+    .license-option {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    .custom-audio-player {
+        padding: 0.5rem;
+    }
+
+    .progress-container {
+        margin: 0.5rem 0;
+    }
+
+    .custom-timeline {
+        height: 4px;
+    }
+
+    .custom-play-btn {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+}
+
+/* Small Mobile Devices */
+@media (max-width: 480px) {
+    .bison-title {
+        font-size: 2.5rem;
+    }
+
+    .bison-subtitle {
+        font-size: 0.9rem;
+        letter-spacing: 0.2em;
+    }
+
+    .hero-description {
+        font-size: 0.9rem;
+    }
+
+    .beats-section h2 {
+        font-size: 1.8rem;
+    }
+
+    .beat-title {
+        font-size: 1.1rem;
+    }
+
+    .beat-price {
+        font-size: 0.9rem;
+    }
+
+    .cart-total {
+        font-size: 0.9rem;
+    }
+
+    #checkout-btn {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) {
+    .beat-item:hover {
+        transform: none;
+    }
+
+    .add-to-cart:hover {
+        background-color: #ff0000;
+    }
+
+    .custom-play-btn:hover {
+        transform: none;
+    }
+
+    .license-option:hover {
+        transform: none;
+    }
+}
+
+/* Back Button Styles */
+.back-button {
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255, 0, 0, 0.3);
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.back-button:hover {
+    background: rgba(255, 0, 0, 0.1);
+    border-color: #ff0000;
+}
+
+.back-button i {
+    font-size: 0.9rem;
+}
+
+/* Empty Cart Message */
+.empty-cart {
+    text-align: center;
+    color: #888;
+    padding: 2rem;
+    font-size: 1.1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    border: 1px solid rgba(255, 0, 0, 0.1);
 } 

@@ -8,6 +8,10 @@ const paymentForm = document.getElementById('payment-form');
 const submitButton = document.getElementById('submit-button');
 const spinner = document.getElementById('spinner');
 const buttonText = document.getElementById('button-text');
+const cartCount = document.getElementById('cart-count');
+
+// Update cart count
+cartCount.textContent = cart.length;
 
 // Initialize Stripe (replace with your actual publishable key)
 const stripe = Stripe('pk_live_51RNaeJH4jaj8obY2Cb2TK4ThCwW7d0ArfKJLznasbKqKsKVBEbwZQHOqkFGopVsbhPGxSFMWFcTMPW1b5c4GPTp100BrVZsQt5');
@@ -47,14 +51,15 @@ card.addEventListener('change', ({error}) => {
 
 // Display cart items
 function displayCheckoutItems() {
-    if (cart.length === 0) {
+    if (!cart || cart.length === 0) {
         checkoutItems.innerHTML = '<p class="empty-cart">Your cart is empty</p>';
+        checkoutTotal.textContent = '$0.00';
         return;
     }
 
     checkoutItems.innerHTML = cart.map(item => `
         <div class="checkout-item">
-            <span class="checkout-item-title">${item.title}</span>
+            <span class="checkout-item-title">${item.title} <span style='color:#ff0000;font-size:0.9em;'>[${item.license}]</span></span>
             <span class="checkout-item-price">$${item.price.toFixed(2)}</span>
         </div>
     `).join('');
@@ -67,6 +72,13 @@ function displayCheckoutItems() {
 // Handle form submission
 paymentForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+    
+    // Check if cart is empty
+    if (!cart || cart.length === 0) {
+        alert('Your cart is empty!');
+        return;
+    }
+
     submitButton.disabled = true;
     spinner.classList.remove('hidden');
     buttonText.textContent = 'Processing...';
@@ -77,12 +89,13 @@ paymentForm.addEventListener('submit', async (e) => {
         const amount = Math.round(total * 100);
 
         // 1. Create PaymentIntent on your server
-        const response = await fetch('/create-payment-intent', {  // Updated to use relative path
+        const response = await fetch('/create-payment-intent', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 amount,
-                email: document.getElementById('email').value
+                email: document.getElementById('email').value,
+                items: cart // Send cart items to server
             })
         });
         const { clientSecret, error } = await response.json();
@@ -153,4 +166,11 @@ cvv.addEventListener('input', (e) => {
 });
 
 // Initialize checkout page
-displayCheckoutItems(); 
+displayCheckoutItems();
+
+// Add back button functionality
+const backButton = document.createElement('button');
+backButton.className = 'back-button';
+backButton.innerHTML = '<i class="fas fa-arrow-left"></i> Back to Store';
+backButton.onclick = () => window.location.href = 'index.html';
+document.querySelector('.checkout-container').insertBefore(backButton, document.querySelector('.checkout-content')); 
