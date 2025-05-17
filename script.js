@@ -363,13 +363,22 @@ window.addEventListener('click', (e) => {
 
 // Checkout functionality
 checkoutBtn.addEventListener('click', () => {
+    console.log('Cart before checkout:', cart);
     if (cart.length === 0) {
         showNotification('Your cart is empty!');
         return;
     }
     
-    // Redirect to checkout page
-    window.location.href = 'checkout.html';
+    // Ensure cart is saved to localStorage
+    try {
+        localStorage.setItem('cart', JSON.stringify(cart));
+        console.log('Cart saved before checkout:', cart);
+        // Redirect to checkout page
+        window.location.href = 'checkout.html';
+    } catch (error) {
+        console.error('Error saving cart:', error);
+        showNotification('Error saving cart. Please try again.');
+    }
 });
 
 // Smooth scroll to beats section

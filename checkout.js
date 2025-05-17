@@ -1,5 +1,22 @@
 // Get cart items from localStorage
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
+let cart = [];
+try {
+    const storedCart = localStorage.getItem('cart');
+    console.log('Raw cart data from localStorage:', storedCart);
+    if (storedCart) {
+        cart = JSON.parse(storedCart);
+        console.log('Parsed cart data:', cart);
+        if (!Array.isArray(cart)) {
+            console.error('Invalid cart data in localStorage - not an array');
+            cart = [];
+        }
+    } else {
+        console.log('No cart data found in localStorage');
+    }
+} catch (error) {
+    console.error('Error reading cart from localStorage:', error);
+    cart = [];
+}
 
 // DOM Elements
 const checkoutItems = document.getElementById('checkout-items');
@@ -51,21 +68,45 @@ card.addEventListener('change', ({error}) => {
 
 // Display cart items
 function displayCheckoutItems() {
-    if (!cart || cart.length === 0) {
-        checkoutItems.innerHTML = '<p class="empty-cart">Your cart is empty</p>';
+    // Ensure cart is valid
+    if (!Array.isArray(cart)) {
+        console.error('Invalid cart data');
+        cart = [];
+    }
+
+    if (cart.length === 0) {
+        checkoutItems.innerHTML = `
+            <div class="empty-cart">
+                <p>Your cart is empty</p>
+                <button class="back-button" onclick="window.location.href='index.html'">
+                    <i class="fas fa-arrow-left"></i> Back to Store
+                </button>
+            </div>`;
         checkoutTotal.textContent = '$0.00';
         return;
     }
 
-    checkoutItems.innerHTML = cart.map(item => `
-        <div class="checkout-item">
-            <span class="checkout-item-title">${item.title} <span style='color:#ff0000;font-size:0.9em;'>[${item.license}]</span></span>
-            <span class="checkout-item-price">$${item.price.toFixed(2)}</span>
-        </div>
-    `).join('');
+    checkoutItems.innerHTML = cart.map(item => {
+        // Ensure item has required properties
+        if (!item || !item.title || typeof item.price !== 'number') {
+            console.error('Invalid item in cart:', item);
+            return '';
+        }
+        return `
+            <div class="checkout-item">
+                <span class="checkout-item-title">${item.title} <span style='color:#ff0000;font-size:0.9em;'>[${item.license || 'Unknown'}]</span></span>
+                <span class="checkout-item-price">$${item.price.toFixed(2)}</span>
+            </div>
+        `;
+    }).join('');
 
     // Update total
-    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    const total = cart.reduce((sum, item) => {
+        if (typeof item.price === 'number') {
+            return sum + item.price;
+        }
+        return sum;
+    }, 0);
     checkoutTotal.textContent = `$${total.toFixed(2)}`;
 }
 
@@ -166,7 +207,24 @@ cvv.addEventListener('input', (e) => {
 });
 
 // Initialize checkout page
+console.log('Initial cart state:', cart);
 displayCheckoutItems();
+
+// Add event listener for storage changes
+window.addEventListener('storage', (e) => {
+    if (e.key === 'cart') {
+        console.log('Cart updated in localStorage');
+        try {
+            const newCart = JSON.parse(e.newValue);
+            if (Array.isArray(newCart)) {
+                cart = newCart;
+                displayCheckoutItems();
+            }
+        } catch (error) {
+            console.error('Error updating cart from storage event:', error);
+        }
+    }
+});
 
 // Add back button functionality
 const backButton = document.createElement('button');
