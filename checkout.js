@@ -182,30 +182,6 @@ paymentForm.addEventListener('submit', async (e) => {
     }
 });
 
-// Format card number input
-const cardNumber = document.getElementById('card-number');
-cardNumber.addEventListener('input', (e) => {
-    let value = e.target.value.replace(/\D/g, '');
-    value = value.replace(/(\d{4})/g, '$1 ').trim();
-    e.target.value = value;
-});
-
-// Format expiry date input
-const expiry = document.getElementById('expiry');
-expiry.addEventListener('input', (e) => {
-    let value = e.target.value.replace(/\D/g, '');
-    if (value.length >= 2) {
-        value = value.slice(0, 2) + '/' + value.slice(2, 4);
-    }
-    e.target.value = value;
-});
-
-// Format CVV input
-const cvv = document.getElementById('cvv');
-cvv.addEventListener('input', (e) => {
-    e.target.value = e.target.value.replace(/\D/g, '').slice(0, 3);
-});
-
 // Initialize checkout page
 console.log('Initial cart state:', cart);
 displayCheckoutItems();
