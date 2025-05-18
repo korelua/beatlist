@@ -8,6 +8,7 @@ const Mailgun = require('mailgun.js');
 const multer = require('multer');
 const fs = require('fs');
 const os = require('os');
+const nodemailer = require('nodemailer');
 const app = express();
 
 // Use environment variable for Stripe secret key
@@ -34,6 +35,17 @@ const storage = multer.diskStorage({
     }
 });
 const upload = multer({ storage });
+
+// Create a transporter using ProtonMail SMTP
+const transporter = nodemailer.createTransport({
+    host: 'smtp.protonmail.ch',
+    port: 587,
+    secure: false,
+    auth: {
+        user: 'koreluca@proton.me',
+        pass: process.env.EMAIL_PASSWORD // We'll set this as an environment variable
+    }
+});
 
 // Serve static files
 app.get('/', (req, res) => {
@@ -150,6 +162,41 @@ app.post('/create-payment-intent', async (req, res) => {
 app.post('/upload-audio-service', upload.array('files'), (req, res) => {
     // files are saved, respond with success
     res.json({ success: true, files: req.files.map(f => f.filename) });
+});
+
+// Contact form endpoint
+app.post('/api/contact', async (req, res) => {
+    const { name, email, subject, message } = req.body;
+
+    try {
+        // Send email
+        await transporter.sendMail({
+            from: 'koreluca@proton.me',
+            to: 'koreluca@proton.me',
+            subject: `Contact Form: ${subject}`,
+            text: `
+Name: ${name}
+Email: ${email}
+Subject: ${subject}
+
+Message:
+${message}
+            `,
+            html: `
+<h2>New Contact Form Submission</h2>
+<p><strong>Name:</strong> ${name}</p>
+<p><strong>Email:</strong> ${email}</p>
+<p><strong>Subject:</strong> ${subject}</p>
+<p><strong>Message:</strong></p>
+<p>${message.replace(/\n/g, '<br>')}</p>
+            `
+        });
+
+        res.json({ success: true, message: 'Email sent successfully!' });
+    } catch (error) {
+        console.error('Error sending email:', error);
+        res.status(500).json({ success: false, message: 'Failed to send email. Please try again later.' });
+    }
 });
 
 // Health check endpoint for Railway

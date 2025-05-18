@@ -375,15 +375,15 @@ function removeFromCart(index) {
 }
 
 // Show notification
-function showNotification(message) {
+function showNotification(message, type = 'success') {
     const notification = document.createElement('div');
-    notification.className = 'notification';
+    notification.className = `notification ${type}`;
     notification.textContent = message;
     document.body.appendChild(notification);
 
     setTimeout(() => {
         notification.remove();
-    }, 2000);
+    }, 3000);
 }
 
 // Modal functionality
@@ -635,4 +635,52 @@ document.addEventListener('DOMContentLoaded', function() {
     mobileMenuBtn.addEventListener('click', function() {
         document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
     });
-}); 
+});
+
+// Contact Form Handling
+const contactForm = document.getElementById('contactForm');
+if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const submitBtn = contactForm.querySelector('.submit-btn');
+        const originalBtnText = submitBtn.textContent;
+        
+        try {
+            // Disable the submit button and show loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value
+            };
+
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                showNotification('Thank you for your message! We will get back to you soon.');
+                contactForm.reset();
+            } else {
+                throw new Error(data.message || 'Failed to send message');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification('There was an error sending your message. Please try again later.', 'error');
+        } finally {
+            // Re-enable the submit button and restore original text
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalBtnText;
+        }
+    });
+} 
