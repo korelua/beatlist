@@ -61,6 +61,7 @@ app.post('/create-payment-intent', async (req, res) => {
         });
 
         // Send confirmation email with Mailgun
+        /*
         const mailgun = new Mailgun(formData);
         const mg = mailgun.client({
             username: 'api',
@@ -136,6 +137,7 @@ app.post('/create-payment-intent', async (req, res) => {
             console.error('Failed to send email:', emailError);
             // Don't fail the payment if email fails
         }
+        */
 
         res.send({ clientSecret: paymentIntent.client_secret });
     } catch (err) {
