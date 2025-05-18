@@ -1593,4 +1593,241 @@ footer {
     background: rgba(0, 0, 0, 0.2);
     border-radius: 4px;
     border: 1px solid rgba(255, 0, 0, 0.1);
+}
+
+/* Audio Services Section */
+.audio-services-section {
+    padding: 4rem 2rem 2rem;
+    background: linear-gradient(90deg, #1a0000 0%, #000 100%);
+    border-bottom: 1px solid rgba(255,0,0,0.1);
+    margin-bottom: 3rem;
+}
+.audio-services-section h2 {
+    color: #fff;
+    font-size: 2.2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(255,0,0,0.2);
+}
+.audio-services-grid {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.audio-service-card {
+    background: rgba(26,0,0,0.85);
+    border: 1px solid rgba(255,0,0,0.15);
+    border-radius: 8px;
+    padding: 2rem 1.5rem;
+    min-width: 250px;
+    max-width: 320px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(255,0,0,0.08);
+    position: relative;
+    transition: transform 0.2s;
+}
+.audio-service-card:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 8px 24px rgba(255,0,0,0.15);
+}
+.audio-service-card h3 {
+    color: #ff0000;
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+}
+.audio-service-card p {
+    color: #fff;
+    font-size: 1rem;
+    margin-bottom: 1.2rem;
+}
+.audio-service-price {
+    font-size: 1.5rem;
+    color: #fff;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+.audio-service-card .old-price {
+    color: #888;
+    text-decoration: line-through;
+    font-size: 1.1rem;
+    margin-right: 0.3rem;
+}
+.audio-service-card .discount-arrow {
+    color: #ff0000;
+    font-size: 1.2rem;
+    margin: 0 0.2rem;
+}
+.audio-service-card .new-price {
+    color: #00ff00;
+    font-weight: bold;
+    font-size: 1.5rem;
+    animation: discountPulse 1.2s infinite alternate;
+}
+@keyframes discountPulse {
+    0% { color: #00ff00; text-shadow: 0 0 8px #00ff00; }
+    100% { color: #ffea00; text-shadow: 0 0 16px #ffea00; }
+}
+.audio-service-add {
+    background: #ff0000;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: background 0.2s, transform 0.2s;
+}
+.audio-service-add:hover {
+    background: #cc0000;
+    transform: scale(1.05);
+}
+.audio-service-card.bundle {
+    border: 2px solid #00ff00;
+    box-shadow: 0 0 16px #00ff0033;
+}
+.discount-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: #00ff00;
+    color: #1a0000;
+    font-size: 0.95rem;
+    font-weight: bold;
+    padding: 0.3rem 0.8rem;
+    border-radius: 2px;
+    box-shadow: 0 2px 8px #00ff0033;
+    animation: badgePop 1.2s infinite alternate;
+}
+@keyframes badgePop {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.12); }
+}
+
+/* Audio Service Upload Modal */
+#audio-service-upload-modal .audio-service-upload-content {
+    background: rgba(26, 0, 0, 0.97);
+    border: 1px solid rgba(0,255,0,0.2);
+    border-radius: 6px;
+    max-width: 480px;
+    margin: 10% auto;
+    padding: 2rem 2rem 1.5rem;
+    position: relative;
+    text-align: left;
+}
+.audio-service-upload-content h2 {
+    color: #00ff00;
+    margin-bottom: 1rem;
+}
+#audio-service-files {
+    margin: 1rem 0 0.5rem 0;
+    width: 100%;
+    color: #fff;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid #00ff00;
+    border-radius: 4px;
+    padding: 0.5rem;
+}
+#audio-service-file-list {
+    margin: 0.5rem 0 0 0;
+    color: #fff;
+    font-size: 0.95rem;
+    min-height: 1.2em;
+}
+#audio-service-upload-confirm {
+    background: #00ff00;
+    color: #1a0000;
+    border: none;
+    border-radius: 4px;
+    padding: 0.7rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+#audio-service-upload-confirm:disabled {
+    background: #444;
+    color: #888;
+    cursor: not-allowed;
+}
+#audio-service-upload-cancel {
+    background: #222;
+    color: #fff;
+    border: 1px solid #888;
+    border-radius: 4px;
+    padding: 0.7rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+#audio-service-upload-cancel:hover {
+    background: #ff0000;
+    color: #fff;
+    border-color: #ff0000;
+}
+.audio-service-upload-close {
+    position: absolute;
+    right: 1.2rem;
+    top: 1.2rem;
+    color: #00ff00;
+    font-size: 1.5rem;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+.audio-service-upload-close:hover {
+    opacity: 1;
+    color: #ff0000;
+}
+
+/* Sale pricing styles for beats */
+.beat-sale-pricing {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.5rem 0 1rem 0;
+    font-size: 1.1rem;
+}
+.beat-old-price {
+    color: #888;
+    text-decoration: line-through;
+    font-size: 1rem;
+    opacity: 0.7;
+}
+.beat-sale-arrow {
+    color: #ff0000;
+    font-size: 1.1rem;
+    opacity: 0.7;
+}
+.beat-sale-price {
+    color: #00ff99;
+    font-weight: bold;
+    font-size: 1.2rem;
+    animation: subtleSalePulse 1.5s infinite alternate;
+}
+@keyframes subtleSalePulse {
+    0% { color: #00ff99; text-shadow: 0 0 4px #00ff99; }
+    100% { color: #00e6e6; text-shadow: 0 0 8px #00e6e6; }
+}
+.beat-sale-badge {
+    background: #00ff99;
+    color: #1a0000;
+    font-size: 0.85rem;
+    font-weight: bold;
+    padding: 0.2rem 0.7rem;
+    border-radius: 2px;
+    margin-left: 0.5rem;
+    opacity: 0.85;
+    animation: badgeFade 2s infinite alternate;
+}
+@keyframes badgeFade {
+    0% { opacity: 0.85; }
+    100% { opacity: 1; }
 } 
