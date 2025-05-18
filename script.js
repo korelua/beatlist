@@ -198,7 +198,7 @@ function displayBeats() {
 
     // Create HTML for each genre section
     beatsGrid.innerHTML = Object.entries(beatsByGenre).map(([genre, genreBeats]) => `
-        <div class="genre-section">
+        <div class="genre-section"${genre === 'Hip-Hop' ? ' id="hiphop-beats"' : ''}>
             <h2 class="genre-title">${genre}</h2>
             <div class="genre-beats">
                 ${genreBeats.map(beat => `
@@ -488,7 +488,7 @@ function displayFilteredBeats(filteredBeats) {
 
     // Create HTML for each genre section
     beatsGrid.innerHTML = Object.entries(beatsByGenre).map(([genre, genreBeats]) => `
-        <div class="genre-section">
+        <div class="genre-section"${genre === 'Hip-Hop' ? ' id="hiphop-beats"' : ''}>
             <h2 class="genre-title">${genre}</h2>
             <div class="genre-beats">
                 ${genreBeats.map(beat => `
