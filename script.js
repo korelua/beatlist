@@ -353,17 +353,33 @@ function updateCart() {
     cartCount.textContent = cart.length;
 
     // Update cart items
-    cartItems.innerHTML = cart.map((item, index) => `
-        <div class="cart-item">
-            <span>${item.title} <span style='color:#ff0000;font-size:0.9em;'>[${item.license}]</span></span>
-            <span>${item.displayPrice}</span>
-            <button onclick="removeFromCart(${index})">Remove</button>
-        </div>
-    `).join('');
+    if (cart.length === 0) {
+        cartItems.innerHTML = `
+            <div class="empty-cart">
+                <i class="fas fa-shopping-cart" style="font-size: 2rem; color: #ff0000; margin-bottom: 1rem;"></i>
+                <p>Your cart is empty</p>
+            </div>
+        `;
+    } else {
+        cartItems.innerHTML = cart.map((item, index) => `
+            <div class="cart-item">
+                <div class="cart-item-info">
+                    <span class="cart-item-title">${item.title}</span>
+                    <span class="cart-item-license" style='color:#ff0000;font-size:0.9em;'>[${item.license || 'Unknown'}]</span>
+                </div>
+                <div class="cart-item-price">
+                    <span>${item.displayPrice || `$${item.price.toFixed(2)}`}</span>
+                    <button onclick="removeFromCart(${index})" class="remove-item">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
 
     // Update total
     const total = cart.reduce((sum, item) => sum + item.price, 0);
-    cartTotal.textContent = total.toFixed(2);
+    cartTotal.textContent = `$${total.toFixed(2)}`;
 }
 
 // Remove from cart

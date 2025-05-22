@@ -100,7 +100,13 @@ function displayCheckoutItems() {
             fileInputHtml = `
                 <div class="service-upload-group" style="margin: 0.5em 0 1.5em 0;">
                     <label style="color:#00ff00;">Upload audio files for <b>${item.title}</b>:</label>
-                    <input type="file" class="service-file-input" data-idx="${idx}" multiple accept="audio/*" style="margin-top:0.5em;">
+                    <div class="custom-file-upload">
+                        <label for="service-file-input-${idx}" class="custom-file-label">
+                            <i class='fas fa-upload'></i> Choose Files
+                        </label>
+                        <input type="file" id="service-file-input-${idx}" class="service-file-input" data-idx="${idx}" multiple accept="audio/*">
+                        <span class="selected-file-name" id="selected-file-name-${idx}">No file chosen</span>
+                    </div>
                     <div class="service-file-list" id="service-file-list-${idx}" style="font-size:0.95em;color:#fff;margin-top:0.3em;"></div>
                     <div class="service-file-error" id="service-file-error-${idx}" style="color:#ff0000;font-size:0.95em;"></div>
                 </div>
@@ -131,11 +137,19 @@ function displayCheckoutItems() {
 function setupServiceFileInputs() {
     document.querySelectorAll('.service-file-input').forEach(input => {
         const idx = input.getAttribute('data-idx');
+        const label = document.querySelector(`label[for='service-file-input-${idx}']`);
+        const fileNameSpan = document.getElementById(`selected-file-name-${idx}`);
+        label.addEventListener('click', () => input.click());
         input.addEventListener('change', (e) => {
             // Only allow audio files
             const files = Array.from(e.target.files).filter(f => f.type.startsWith('audio/'));
             serviceFilesMap[idx] = files;
             // Show file names
+            if (files.length > 0) {
+                fileNameSpan.textContent = files.map(f => f.name).join(', ');
+            } else {
+                fileNameSpan.textContent = 'No file chosen';
+            }
             const fileListDiv = document.getElementById(`service-file-list-${idx}`);
             const errorDiv = document.getElementById(`service-file-error-${idx}`);
             if (files.length > 0) {
