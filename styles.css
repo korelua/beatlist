@@ -78,12 +78,13 @@ nav {
     right: 2rem;
     top: 50%;
     transform: translateY(-50%);
+    transition: all 0.3s ease;
 }
 
 .cart-icon:hover {
     color: #ff3e3e;
     background: rgba(255, 62, 62, 0.1);
-    transform: translateY(-2px);
+    transform: translateY(-50%) scale(1.1);
     border-color: rgba(255, 62, 62, 0.3);
     box-shadow: 0 5px 15px rgba(255, 62, 62, 0.1);
 }

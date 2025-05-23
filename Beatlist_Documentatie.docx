@@ -1,0 +1,56 @@
+# Beatlist
+
+## Autor: Luca Pasca
+## Profesor coordonator: Enache Paul
+## Data: [completează data]
+
+---
+
+## Cuprins
+1. Introducere
+2. Tehnologii folosite
+3. Structura și paginile site-ului
+4. Funcționalități principale
+5. Capturi de ecran
+6. Concluzii
+
+---
+
+## 1. Introducere
+
+Proiectul "Beatlist" este un site modern pentru vânzarea de beat-uri și servicii audio, destinat artiștilor și producătorilor muzicali. Platforma oferă o experiență interactivă, cu design atractiv și funcționalități avansate pentru gestionarea cumpărăturilor și a serviciilor audio.
+
+## 2. Tehnologii folosite
+- HTML5, CSS3 (design responsiv, animații moderne)
+- JavaScript (funcționalități dinamice, player audio, validări)
+- Node.js & Express (backend, API)
+- Stripe (procesare plăți online)
+- Heroku (deploy online)
+- GitHub (control versiuni)
+
+## 3. Structura și paginile site-ului
+- **Home:** Prezentare generală, colecție de beat-uri, filtrare și căutare
+- **Audio Services:** Oferte de mix/master, adăugare în coș, upload fișiere
+- **Contact:** Formular de contact cu trimitere email
+- **Checkout:** Rezumat comandă, formular plată, upload fișiere pentru servicii
+
+## 4. Funcționalități principale
+- Player audio custom pentru preview beat-uri
+- Coș de cumpărături persistent (localStorage)
+- Selectare licență pentru fiecare beat
+- Upload fișiere audio pentru servicii (Mix/Master)
+- Procesare plăți online cu Stripe
+- Notificări vizuale pentru acțiuni (adăugare/ștergere din coș, succes plată)
+- Design modern, animații și efecte vizuale
+
+## 5. Capturi de ecran
+
+[Adaugă aici capturi de ecran relevante cu paginile principale și funcționalitățile site-ului.]
+
+## 6. Concluzii
+
+"Beatlist" demonstrează integrarea tehnologiilor web moderne într-o platformă utilă și atractivă pentru utilizatori, cu accent pe experiența vizuală și funcționalitate. Proiectul poate fi extins cu noi funcții (ex: conturi utilizator, chat, blog) și reprezintă o bază solidă pentru dezvoltare ulterioară.
+
+---
+
+*Documentație generată automat pe baza structurii modelului cerut.* 
